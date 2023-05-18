@@ -9,7 +9,7 @@ import {
 import { useRecoilState } from "recoil";
 import { todoListState, todoListStateType } from "./lib/atom";
 import { TodoListStats } from "./TodoListStat";
-import { SetStateAction, useState } from "react";
+import { FC, SetStateAction, useState } from "react";
 
 /**
  * リストのカウントID
@@ -32,6 +32,13 @@ const getId = (): number => {
  * @returns
  */
 export const TodoList = () => {
+  return <TodoListCon/>
+};
+
+/**
+ * TodoListのロジック
+ */
+const TodoListCon = () => {
   const [title, setTitle] = useState<string>("");
   const [todoList, setTodoList] =
     useRecoilState<todoListStateType[]>(todoListState);
@@ -53,7 +60,31 @@ export const TodoList = () => {
     ]);
     setTitle("");
   };
+  return (
+    <TodoListPre
+      addItem={addItem}
+      handleChange={handleChange}
+      title={title}
+      todoList={todoList}
+    />
+  );
+};
 
+interface TodoListPreProps {
+  title: string;
+  todoList: todoListStateType[];
+  handleChange: (e: {
+    target: {
+      value: SetStateAction<string>;
+    };
+  }) => void;
+  addItem: () => void;
+}
+/**
+ * TodoListの画面
+ */
+const TodoListPre: FC<TodoListPreProps> = (props) => {
+  const { addItem, handleChange, title, todoList } = props;
   return (
     <>
       <Typography variant="h2">RecoilによるTodoアプリ</Typography>
